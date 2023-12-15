@@ -1,5 +1,7 @@
 class Todo {
-  Todo({required this.name, required this.completed});
   String name;
+  String description;
   bool completed;
+
+  Todo({required this.name, this.description = '', required this.completed});
 }

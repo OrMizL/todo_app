@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/src/models/todo.dart';
+import 'package:todo_app/src/services/dialog_service.dart';
 import 'package:todo_app/src/widgets/todo_list.dart';
 
 class MainScreen extends StatefulWidget {
@@ -11,13 +12,21 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final List<Todo> _todos = <Todo>[];
-  final TextEditingController _textFieldController = TextEditingController();
+  late DialogService dialogService;
 
-  void _addTodoItem(String name) {
-    setState(() {
-      _todos.add(Todo(name: name, completed: false));
-    });
-    _textFieldController.clear();
+  @override
+  void initState() {
+    super.initState();
+    dialogService = DialogService(context);
+  }
+
+  void _handleAddTodo() async {
+    final Todo? newTodo = await dialogService.showAddTodoDialog();
+    if (newTodo != null) {
+      setState(() {
+        _todos.add(Todo(name: newTodo.name, completed: false));
+      });
+    }
   }
 
   void _handleTodoChange(Todo todo) {
@@ -30,58 +39,6 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       _todos.removeWhere((element) => element.name == todo.name);
     });
-  }
-
-  Future<void> _displayDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Add a Todo'),
-          content: TextField(
-            controller: _textFieldController,
-            decoration: const InputDecoration(
-              hintText: 'Type your todo',
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.teal),
-              ),
-            ),
-            autofocus: true,
-            cursorColor: Colors.teal,
-          ),
-          actions: <Widget>[
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                backgroundColor: Colors.teal,
-                foregroundColor: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                backgroundColor: Colors.teal,
-                foregroundColor: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _addTodoItem(_textFieldController.text);
-              },
-              child: const Text('Add'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -141,7 +98,7 @@ class _MainScreenState extends State<MainScreen> {
           onTodoDelete: _handleTodoDelete),
       backgroundColor: Colors.teal,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _displayDialog(),
+        onPressed: _handleAddTodo,
         tooltip: 'Add Todo',
         backgroundColor: Colors.white,
         shape: const BeveledRectangleBorder(
