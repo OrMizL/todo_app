@@ -14,8 +14,8 @@ class TodoItem extends StatelessWidget {
 
   TextStyle? _getTextStyle(bool checked, bool isDescription) {
     TextStyle styleToBeApplied = TextStyle(
-      fontSize: isDescription ? 14.0 : 20.0,
-      color: isDescription ? Colors.black54 : Colors.black,
+      fontSize: isDescription ? 16.0 : 20.0,
+      color: isDescription ? Colors.black87 : Colors.black,
     );
 
     if (checked) {
@@ -56,22 +56,35 @@ class TodoItem extends StatelessWidget {
                   Text(
                     todo.description,
                     style: _getTextStyle(todo.completed, true),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.timer,
+                      color: Colors.deepPurple[100],
+                    )
+                  ],
+                )
               ],
             ),
           ),
-          IconButton(
-            iconSize: 30,
-            icon: Icon(
-              Icons.delete,
-              color: Colors.red[300],
-            ),
-            alignment: Alignment.centerRight,
-            onPressed: () {
-              onTodoDelete(todo);
-            },
-          ),
         ],
+      ),
+      trailing: IconButton(
+        iconSize: 30,
+        icon: Icon(
+          Icons.delete,
+          color: Colors.red[300],
+        ),
+        alignment: Alignment.centerRight,
+        onPressed: () {
+          onTodoDelete(todo);
+        },
       ),
     );
   }

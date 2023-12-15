@@ -16,12 +16,20 @@ class TodoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
-        children: todos.map((Todo todo) {
-          return TodoItem(
-              todo: todo,
-              onTodoChange: onTodoChange,
-              onTodoDelete: onTodoDelete);
-        }).toList());
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      children: todos.map((Todo todo) {
+        return Column(
+          children: [
+            TodoItem(
+                todo: todo,
+                onTodoChange: onTodoChange,
+                onTodoDelete: onTodoDelete),
+            const SizedBox(
+              height: 10,
+            ),
+          ],
+        );
+      }).toList(),
+    );
   }
 }
