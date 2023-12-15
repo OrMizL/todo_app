@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/src/models/todo.dart';
-import 'package:todo_app/src/widgets/todo_item.dart';
+import 'package:todo_app/src/widgets/todo_list.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -135,15 +135,10 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
-        children: _todos.map((Todo todo) {
-          return TodoItem(
-              todo: todo,
-              onTodoChange: _handleTodoChange,
-              onTodoDelete: _handleTodoDelete);
-        }).toList(),
-      ),
+      body: TodoList(
+          todos: _todos,
+          onTodoChange: _handleTodoChange,
+          onTodoDelete: _handleTodoDelete),
       backgroundColor: Colors.teal,
       floatingActionButton: FloatingActionButton(
         onPressed: () => _displayDialog(),
