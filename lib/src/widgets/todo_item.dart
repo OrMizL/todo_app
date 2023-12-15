@@ -12,13 +12,20 @@ class TodoItem extends StatelessWidget {
   final void Function(Todo todo) onTodoChange;
   final void Function(Todo todo) onTodoDelete;
 
-  TextStyle? _getTextStyle(bool checked) {
-    if (!checked) return null;
-
-    return const TextStyle(
-      color: Colors.black54,
-      decoration: TextDecoration.lineThrough,
+  TextStyle? _getTextStyle(bool checked, bool isDescription) {
+    TextStyle styleToBeApplied = TextStyle(
+      fontSize: isDescription ? 14.0 : 20.0,
+      color: isDescription ? Colors.black54 : Colors.black,
     );
+
+    if (checked) {
+      styleToBeApplied = styleToBeApplied.copyWith(
+        color: Colors.black54,
+        decoration: TextDecoration.lineThrough,
+      );
+    }
+
+    return styleToBeApplied;
   }
 
   @override
@@ -35,22 +42,37 @@ class TodoItem extends StatelessWidget {
           onTodoChange(todo);
         },
       ),
-      title: Row(children: <Widget>[
-        Expanded(
-          child: Text(todo.title, style: _getTextStyle(todo.completed)),
-        ),
-        IconButton(
-          iconSize: 30,
-          icon: Icon(
-            Icons.delete,
-            color: Colors.red[300],
+      title: Row(
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  todo.title,
+                  style: _getTextStyle(todo.completed, false),
+                ),
+                if (todo.description != '')
+                  Text(
+                    todo.description,
+                    style: _getTextStyle(todo.completed, true),
+                  ),
+              ],
+            ),
           ),
-          alignment: Alignment.centerRight,
-          onPressed: () {
-            onTodoDelete(todo);
-          },
-        ),
-      ]),
+          IconButton(
+            iconSize: 30,
+            icon: Icon(
+              Icons.delete,
+              color: Colors.red[300],
+            ),
+            alignment: Alignment.centerRight,
+            onPressed: () {
+              onTodoDelete(todo);
+            },
+          ),
+        ],
+      ),
     );
   }
 }
