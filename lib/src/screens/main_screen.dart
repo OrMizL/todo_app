@@ -24,7 +24,7 @@ class _MainScreenState extends State<MainScreen> {
     final Todo? newTodo = await dialogService.showAddTodoDialog();
     if (newTodo != null) {
       setState(() {
-        _todos.add(Todo(name: newTodo.name, completed: false));
+        _todos.add(newTodo);
       });
     }
   }
@@ -37,7 +37,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void _handleTodoDelete(Todo todo) {
     setState(() {
-      _todos.removeWhere((element) => element.name == todo.name);
+      _todos.removeWhere((element) => element.title == todo.title);
     });
   }
 
@@ -93,9 +93,10 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
       body: TodoList(
-          todos: _todos,
-          onTodoChange: _handleTodoChange,
-          onTodoDelete: _handleTodoDelete),
+        todos: _todos,
+        onTodoChange: _handleTodoChange,
+        onTodoDelete: _handleTodoDelete,
+      ),
       backgroundColor: Colors.teal,
       floatingActionButton: FloatingActionButton(
         onPressed: _handleAddTodo,

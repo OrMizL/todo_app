@@ -37,7 +37,7 @@ class TodoItem extends StatelessWidget {
       ),
       title: Row(children: <Widget>[
         Expanded(
-          child: Text(todo.name, style: _getTextStyle(todo.completed)),
+          child: Text(todo.title, style: _getTextStyle(todo.completed)),
         ),
         IconButton(
           iconSize: 30,

@@ -11,7 +11,7 @@ class TodoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Simple Flutter App',
+      title: 'The TODO list of the future',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
