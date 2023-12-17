@@ -1,12 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:todo_app/src/models/todo.dart';
+import 'package:todo_app/src/widgets/date_time_picker_dialog.dart';
 
-class AddTodoDialog extends StatelessWidget {
+class AddTodoDialog extends StatefulWidget {
   AddTodoDialog({super.key});
 
+  @override
+  State<AddTodoDialog> createState() => _AddTodoDialogState();
+}
+
+class _AddTodoDialogState extends State<AddTodoDialog> {
   final TextEditingController titleFieldController = TextEditingController();
+
   final TextEditingController descriptionFieldController =
       TextEditingController();
+
+  DateTime? selectedDue;
+
+  Future<DateTime?> _showDateTimePickerDialog(BuildContext context) async {
+    return showDialog<DateTime>(
+      context: context,
+      builder: (BuildContext context) => DateTimePickerDialog(),
+    );
+  }
+
+  Future<void> _selectDateTime() async {
+    final DateTime? pickedDateTime = await _showDateTimePickerDialog(context);
+    if (pickedDateTime != null) {
+      setState(() {
+        selectedDue = pickedDateTime;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +70,18 @@ class AddTodoDialog extends StatelessWidget {
                 cursorColor: Colors.teal,
               ),
             ),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: _selectDateTime,
+                  icon: const Icon(
+                    Icons.timer,
+                  ),
+                ),
+                if (selectedDue != null)
+                  Text(DateFormat('EEE, M/d/y').format(selectedDue!))
+              ],
+            )
           ],
         ),
       ),
@@ -75,6 +113,7 @@ class AddTodoDialog extends StatelessWidget {
                 Todo(
                   title: titleFieldController.text,
                   description: descriptionFieldController.text,
+                  due: selectedDue,
                 ));
             titleFieldController.clear();
           },
