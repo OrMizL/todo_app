@@ -70,18 +70,33 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
                 cursorColor: Colors.teal,
               ),
             ),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: _selectDateTime,
-                  icon: const Icon(
-                    Icons.timer,
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: _selectDateTime,
+                    child: Container(
+                      width: 24.0, // Smaller width
+                      height: 24.0, // Smaller height
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.only(right: 10),
+                      child: const Icon(
+                        Icons.timer,
+                        size: 24.0,
+                      ), // Icon with original size
+                    ),
                   ),
-                ),
-                if (selectedDue != null)
-                  Text(DateFormat('EEE, M/d/y').format(selectedDue!))
-              ],
-            )
+                  if (selectedDue != null)
+                    Text(
+                      DateFormat('EEE, M/d/y').format(selectedDue!),
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    )
+                ],
+              ),
+            ),
           ],
         ),
       ),
