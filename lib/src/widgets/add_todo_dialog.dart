@@ -18,8 +18,8 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
 
   DateTime? selectedDue;
   bool notificationsOn = false;
-  int selectedReminderValue = 1; // Default value
-  String selectedReminderUnit = 'Minutes'; // Default unit
+  int? selectedReminderValue;
+  String? selectedReminderUnit;
 
   List<DropdownMenuItem<int>> reminderValueItems = List.generate(
     60,
@@ -47,6 +47,7 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
     if (pickedDateTime != null) {
       setState(() {
         selectedDue = pickedDateTime;
+        notificationsOn = true;
       });
     }
   }
@@ -54,20 +55,26 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
   DateTime? _getReminderDateTime() {
     switch (selectedReminderUnit) {
       case 'Minutes':
-        return selectedDue!.subtract(Duration(minutes: selectedReminderValue));
+        return selectedDue!.subtract(Duration(minutes: selectedReminderValue!));
       case 'Hours':
-        return selectedDue!.subtract(Duration(hours: selectedReminderValue));
+        return selectedDue!.subtract(Duration(hours: selectedReminderValue!));
       case 'Days':
-        return selectedDue!.subtract(Duration(days: selectedReminderValue));
+        return selectedDue!.subtract(Duration(days: selectedReminderValue!));
       default:
         return null;
     }
   }
 
   void _toggleNotifications() {
-    setState(() {
-      notificationsOn = !notificationsOn;
-    });
+    if (selectedDue != null) {
+      if (notificationsOn) {
+        selectedReminderValue = null;
+        selectedReminderUnit = null;
+      }
+      setState(() {
+        notificationsOn = !notificationsOn;
+      });
+    }
   }
 
   @override
@@ -156,20 +163,34 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
                     Row(
                       children: <Widget>[
                         DropdownButton<int>(
-                          value: selectedReminderValue,
+                          value: selectedReminderValue ?? 1,
                           items: reminderValueItems,
                           onChanged: (value) => setState(() {
                             selectedReminderValue = value!;
                           }),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         DropdownButton<String>(
-                          value: selectedReminderUnit,
+                          value: selectedReminderUnit ?? 'Minutes',
                           items: reminderUnitItems,
                           onChanged: (value) => setState(() {
                             selectedReminderUnit = value!;
                           }),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
                         ),
+                        const Text(
+                          ' Before due date',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        )
                       ],
                     )
                 ],
