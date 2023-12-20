@@ -4,7 +4,7 @@ import 'package:todo_app/src/models/todo.dart';
 import 'package:todo_app/src/widgets/date_time_picker_dialog.dart';
 
 class AddTodoDialog extends StatefulWidget {
-  AddTodoDialog({super.key});
+  const AddTodoDialog({super.key});
 
   @override
   State<AddTodoDialog> createState() => _AddTodoDialogState();
@@ -17,11 +17,28 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
       TextEditingController();
 
   DateTime? selectedDue;
+  bool notificationsOn = false;
+  int selectedReminderValue = 1; // Default value
+  String selectedReminderUnit = 'Minutes'; // Default unit
+
+  List<DropdownMenuItem<int>> reminderValueItems = List.generate(
+    60,
+    (index) => DropdownMenuItem(
+      value: index + 1,
+      child: Text('${index + 1}'),
+    ),
+  );
+
+  List<DropdownMenuItem<String>> reminderUnitItems = [
+    const DropdownMenuItem(value: 'Minutes', child: Text('Minutes')),
+    const DropdownMenuItem(value: 'Hours', child: Text('Hours')),
+    const DropdownMenuItem(value: 'Days', child: Text('Days')),
+  ];
 
   Future<DateTime?> _showDateTimePickerDialog(BuildContext context) async {
     return showDialog<DateTime>(
       context: context,
-      builder: (BuildContext context) => DateTimePickerDialog(),
+      builder: (BuildContext context) => const DateTimePickerDialog(),
     );
   }
 
@@ -32,6 +49,25 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
         selectedDue = pickedDateTime;
       });
     }
+  }
+
+  DateTime? _getReminderDateTime() {
+    switch (selectedReminderUnit) {
+      case 'Minutes':
+        return selectedDue!.subtract(Duration(minutes: selectedReminderValue));
+      case 'Hours':
+        return selectedDue!.subtract(Duration(hours: selectedReminderValue));
+      case 'Days':
+        return selectedDue!.subtract(Duration(days: selectedReminderValue));
+      default:
+        return null;
+    }
+  }
+
+  void _toggleNotifications() {
+    setState(() {
+      notificationsOn = !notificationsOn;
+    });
   }
 
   @override
@@ -77,22 +113,64 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
                   InkWell(
                     onTap: _selectDateTime,
                     child: Container(
-                      width: 24.0, // Smaller width
-                      height: 24.0, // Smaller height
+                      width: 24.0,
+                      height: 24.0,
                       alignment: Alignment.center,
                       margin: const EdgeInsets.only(right: 10),
-                      child: const Icon(
-                        Icons.timer,
+                      child: Icon(
+                        Icons.today,
                         size: 24.0,
-                      ), // Icon with original size
+                        color: selectedDue != null ? Colors.lime : Colors.black,
+                      ),
                     ),
                   ),
                   if (selectedDue != null)
                     Text(
-                      DateFormat('EEE, M/d/y').format(selectedDue!),
+                      DateFormat('EEE, M/d/y - HH:mm').format(selectedDue!),
                       style: const TextStyle(
                         fontSize: 14,
                       ),
+                    )
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: _toggleNotifications,
+                    child: Container(
+                      width: 24.0,
+                      height: 24.0,
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.only(right: 10),
+                      child: Icon(
+                        Icons.notifications,
+                        size: 24.0,
+                        color: notificationsOn ? Colors.lime : Colors.black,
+                      ),
+                    ),
+                  ),
+                  if (notificationsOn)
+                    Row(
+                      children: <Widget>[
+                        DropdownButton<int>(
+                          value: selectedReminderValue,
+                          items: reminderValueItems,
+                          onChanged: (value) => setState(() {
+                            selectedReminderValue = value!;
+                          }),
+                        ),
+                        const SizedBox(width: 8),
+                        DropdownButton<String>(
+                          value: selectedReminderUnit,
+                          items: reminderUnitItems,
+                          onChanged: (value) => setState(() {
+                            selectedReminderUnit = value!;
+                          }),
+                        ),
+                      ],
                     )
                 ],
               ),
@@ -124,12 +202,14 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
           ),
           onPressed: () {
             Navigator.pop(
-                context,
-                Todo(
-                  title: titleFieldController.text,
-                  description: descriptionFieldController.text,
-                  due: selectedDue,
-                ));
+              context,
+              Todo(
+                title: titleFieldController.text,
+                description: descriptionFieldController.text,
+                due: selectedDue,
+                reminder: notificationsOn ? _getReminderDateTime() : null,
+              ),
+            );
             titleFieldController.clear();
           },
           child: const Text('Add'),
