@@ -165,9 +165,11 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
                         DropdownButton<int>(
                           value: selectedReminderValue ?? 1,
                           items: reminderValueItems,
-                          onChanged: (value) => setState(() {
-                            selectedReminderValue = value!;
-                          }),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedReminderValue = value!;
+                            });
+                          },
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.black,
@@ -177,9 +179,11 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
                         DropdownButton<String>(
                           value: selectedReminderUnit ?? 'Minutes',
                           items: reminderUnitItems,
-                          onChanged: (value) => setState(() {
-                            selectedReminderUnit = value!;
-                          }),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedReminderUnit = value!;
+                            });
+                          },
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.black,

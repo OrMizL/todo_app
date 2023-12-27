@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/src/models/todo.dart';
+import 'package:intl/intl.dart';
 
 class TodoItem extends StatelessWidget {
   TodoItem(
@@ -26,6 +27,23 @@ class TodoItem extends StatelessWidget {
     }
 
     return styleToBeApplied;
+  }
+
+  String _getTimeUntilRemaining(DateTime? reminderDateTime) {
+    Duration difference = reminderDateTime!.difference(DateTime.now());
+    List<String> stringParts = [];
+
+    if (difference.inDays > 0) stringParts.add('${difference.inDays}d');
+
+    if ((difference.inHours % 24) > 0) {
+      stringParts.add('${difference.inHours % 24}h');
+    }
+
+    if ((difference.inMinutes % 60) > 0) {
+      stringParts.add('${difference.inMinutes % 60}m');
+    }
+
+    return stringParts.join(', ');
   }
 
   @override
@@ -60,16 +78,62 @@ class TodoItem extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 const SizedBox(
-                  height: 5,
+                  height: 10,
                 ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.timer,
-                      color: Colors.deepPurple[100],
-                    )
-                  ],
-                )
+                if (todo.due != null || todo.reminder != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      if (todo.due != null)
+                        Column(
+                          children: [
+                            Icon(
+                              Icons.today,
+                              color: Colors.deepPurple[500],
+                            ),
+                            const SizedBox(
+                              height: 6,
+                            ),
+                            Text(
+                              DateFormat('M/d/yy').format(todo.due!),
+                              style: TextStyle(
+                                  fontSize: 14, color: Colors.deepPurple[500]),
+                            ),
+                            Text(
+                              DateFormat('HH:mm').format(todo.due!),
+                              style: TextStyle(
+                                  fontSize: 14, color: Colors.deepPurple[500]),
+                            ),
+                          ],
+                        ),
+                      if (todo.reminder != null)
+                        Column(
+                          children: [
+                            Icon(
+                              Icons.notifications,
+                              color: Colors.deepPurple[500],
+                            ),
+                            const SizedBox(
+                              height: 6,
+                            ),
+                            Text(
+                              'Will be reminded in',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.deepPurple[500],
+                              ),
+                            ),
+                            Text(
+                              _getTimeUntilRemaining(todo.reminder),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.deepPurple[500],
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
               ],
             ),
           ),
