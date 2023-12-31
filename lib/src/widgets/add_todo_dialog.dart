@@ -18,8 +18,8 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
 
   DateTime? selectedDue;
   bool notificationsOn = false;
-  int? selectedReminderValue;
-  String? selectedReminderUnit;
+  int? selectedReminderValue = 1;
+  String? selectedReminderUnit = 'Minutes';
 
   List<DropdownMenuItem<int>> reminderValueItems = List.generate(
     60,
@@ -47,7 +47,6 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
     if (pickedDateTime != null) {
       setState(() {
         selectedDue = pickedDateTime;
-        notificationsOn = true;
       });
     }
   }
