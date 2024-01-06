@@ -18,8 +18,8 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
 
   DateTime? selectedDue;
   bool notificationsOn = false;
-  int? selectedReminderValue = 1;
-  String? selectedReminderUnit = 'Minutes';
+  int? selectedReminderValue;
+  String? selectedReminderUnit;
 
   List<DropdownMenuItem<int>> reminderValueItems = List.generate(
     60,
@@ -66,10 +66,8 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
 
   void _toggleNotifications() {
     if (selectedDue != null) {
-      if (notificationsOn) {
-        selectedReminderValue = null;
-        selectedReminderUnit = null;
-      }
+      selectedReminderValue = notificationsOn ? null : 1;
+      selectedReminderUnit = notificationsOn ? null : 'Minutes';
       setState(() {
         notificationsOn = !notificationsOn;
       });
@@ -189,7 +187,7 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
                           ),
                         ),
                         const Text(
-                          ' Before due date',
+                          ' Before',
                           style: TextStyle(
                             fontSize: 14,
                           ),

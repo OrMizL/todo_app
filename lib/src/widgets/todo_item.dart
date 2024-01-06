@@ -117,7 +117,7 @@ class TodoItem extends StatelessWidget {
                               height: 6,
                             ),
                             Text(
-                              'Will be reminded in',
+                              'Reminded in',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.deepPurple[500],
