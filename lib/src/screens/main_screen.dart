@@ -1,49 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/src/models/todo.dart';
-import 'package:todo_app/src/services/dialog_service.dart';
 import 'package:todo_app/src/widgets/todo_list.dart';
+import 'package:todo_app/src/providers/providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
-
+class MainScreen extends ConsumerWidget {
   @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  final List<Todo> _todos = <Todo>[];
-  late DialogService dialogService;
-
-  @override
-  void initState() {
-    super.initState();
-    dialogService = DialogService(context);
-  }
-
-  void _handleAddTodo() async {
-    final Todo? newTodo = await dialogService.showAddTodoDialog();
-    if (newTodo != null) {
-      setState(() {
-        _todos.add(newTodo);
-      });
-    }
-  }
+  // void initState() {
+  //   super.initState();
+  //   dialogService = DialogService(context);
+  // }
 
   void _handleTodoChange(Todo todo) {
-    setState(() {
-      todo.completed = !todo.completed;
-    });
-  }
-
-  void _handleTodoDelete(Todo todo) {
-    setState(() {
-      _todos.removeWhere((element) => element.title == todo.title);
-    });
+    // setState(() {
+    //   todo.completed = !todo.completed;
+    // });
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final List<Todo> todos = ref.watch(todoListProvider);
+    final dialogService = ref.watch(dialogServiceProvider);
     double statusBarHeight = MediaQuery.of(context).padding.top;
+
+    void handleAddTodo() async {
+      final Todo? newTodo = await dialogService.showAddTodoDialog(context);
+      if (newTodo != null) {
+        ref.read(todoListProvider.notifier).state = [...todos, newTodo];
+      }
+    }
+
+    void handleTodoDelete(Todo todo) {
+      ref.read(todoListProvider.notifier).state = ref
+          .read(todoListProvider.notifier)
+          .state
+          .where((item) => item.title != todo.title)
+          .toList();
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -93,13 +86,12 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
       body: TodoList(
-        todos: _todos,
         onTodoChange: _handleTodoChange,
-        onTodoDelete: _handleTodoDelete,
+        onTodoDelete: handleTodoDelete,
       ),
       backgroundColor: Colors.teal,
       floatingActionButton: FloatingActionButton(
-        onPressed: _handleAddTodo,
+        onPressed: handleAddTodo,
         tooltip: 'Add Todo',
         backgroundColor: Colors.white,
         shape: const BeveledRectangleBorder(

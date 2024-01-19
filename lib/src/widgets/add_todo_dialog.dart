@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/src/models/todo.dart';
-import 'package:todo_app/src/widgets/date_time_picker_dialog.dart';
+import 'package:todo_app/src/providers/providers.dart';
 
-class AddTodoDialog extends StatefulWidget {
+class AddTodoDialog extends ConsumerStatefulWidget {
   const AddTodoDialog({super.key});
 
   @override
-  State<AddTodoDialog> createState() => _AddTodoDialogState();
+  ConsumerState<AddTodoDialog> createState() => _AddTodoDialogState();
 }
 
-class _AddTodoDialogState extends State<AddTodoDialog> {
+class _AddTodoDialogState extends ConsumerState<AddTodoDialog> {
   final TextEditingController titleFieldController = TextEditingController();
 
   final TextEditingController descriptionFieldController =
@@ -34,22 +35,6 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
     const DropdownMenuItem(value: 'Hours', child: Text('Hours')),
     const DropdownMenuItem(value: 'Days', child: Text('Days')),
   ];
-
-  Future<DateTime?> _showDateTimePickerDialog(BuildContext context) async {
-    return showDialog<DateTime>(
-      context: context,
-      builder: (BuildContext context) => const DateTimePickerDialog(),
-    );
-  }
-
-  Future<void> _selectDateTime() async {
-    final DateTime? pickedDateTime = await _showDateTimePickerDialog(context);
-    if (pickedDateTime != null) {
-      setState(() {
-        selectedDue = pickedDateTime;
-      });
-    }
-  }
 
   DateTime? _getReminderDateTime() {
     switch (selectedReminderUnit) {
@@ -76,6 +61,18 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final dialogService = ref.watch(dialogServiceProvider);
+
+    Future<void> selectDateTime() async {
+      final DateTime? pickedDateTime =
+          await dialogService.showDateTimePickerDialog(context);
+      if (pickedDateTime != null) {
+        setState(() {
+          selectedDue = pickedDateTime;
+        });
+      }
+    }
+
     return AlertDialog(
       title: const Text('Add a Todo'),
       content: SingleChildScrollView(
@@ -115,7 +112,7 @@ class _AddTodoDialogState extends State<AddTodoDialog> {
               child: Row(
                 children: [
                   InkWell(
-                    onTap: _selectDateTime,
+                    onTap: selectDateTime,
                     child: Container(
                       width: 24.0,
                       height: 24.0,
