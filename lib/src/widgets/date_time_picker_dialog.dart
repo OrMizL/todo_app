@@ -14,6 +14,7 @@ class _DateTimePickerDialogState extends State<DateTimePickerDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
     return AlertDialog(
       title: const Text("Select Date and Time"),
       content: SizedBox(
@@ -21,32 +22,39 @@ class _DateTimePickerDialogState extends State<DateTimePickerDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            CalendarDatePicker(
-              initialDate: selectedDate,
-              firstDate: DateTime(2000),
-              lastDate: DateTime(2100),
-              onDateChanged: (newDate) {
-                setState(() {
-                  selectedDate = newDate;
-                });
-              },
+            Container(
+              height: screenSize.height * 0.4,
+              child: CalendarDatePicker(
+                initialDate: selectedDate,
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2100),
+                onDateChanged: (newDate) {
+                  setState(() {
+                    selectedDate = newDate;
+                  });
+                },
+              ),
             ),
             const SizedBox(height: 8),
-            TimePickerSpinner(
-              is24HourMode: true,
-              normalTextStyle: const TextStyle(fontSize: 14),
-              highlightedTextStyle: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            Container(
+              height: screenSize.height * 0.2,
+              child: TimePickerSpinner(
+                alignment: Alignment.center,
+                is24HourMode: true,
+                normalTextStyle: const TextStyle(fontSize: 14),
+                highlightedTextStyle: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                spacing: 5,
+                itemHeight: 50,
+                isForce2Digits: true,
+                onTimeChange: (newTime) {
+                  setState(() {
+                    selectedTime = newTime;
+                  });
+                },
               ),
-              spacing: 10,
-              itemHeight: 50,
-              isForce2Digits: true,
-              onTimeChange: (newTime) {
-                setState(() {
-                  selectedTime = newTime;
-                });
-              },
             ),
           ],
         ),

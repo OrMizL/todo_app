@@ -5,6 +5,8 @@ import 'package:todo_app/src/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MainScreen extends ConsumerWidget {
+  const MainScreen({super.key});
+
   @override
   // void initState() {
   //   super.initState();
@@ -36,6 +38,15 @@ class MainScreen extends ConsumerWidget {
           .state
           .where((item) => item.title != todo.title)
           .toList();
+    }
+
+    void handleTodoChange(Todo todo) {
+      ref.read(todoListProvider.notifier).state =
+          ref.read(todoListProvider.notifier).state.map((currentTodo) {
+        if (currentTodo.id == todo.id)
+          currentTodo.completed = !currentTodo.completed;
+        return currentTodo;
+      }).toList();
     }
 
     return Scaffold(
@@ -86,7 +97,7 @@ class MainScreen extends ConsumerWidget {
         ),
       ),
       body: TodoList(
-        onTodoChange: _handleTodoChange,
+        onTodoChange: handleTodoChange,
         onTodoDelete: handleTodoDelete,
       ),
       backgroundColor: Colors.teal,
