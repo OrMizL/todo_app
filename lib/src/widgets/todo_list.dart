@@ -20,10 +20,18 @@ class TodoList extends ConsumerWidget {
       children: todos.map((Todo todo) {
         return Column(
           children: [
-            TodoItem(
-              todo: todo,
-              onTodoChange: onTodoChange,
-              onTodoDelete: onTodoDelete,
+            Container(
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 50, 50, 50),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: TodoItem(
+                  todo: todo,
+                  onTodoChange: onTodoChange,
+                  onTodoDelete: onTodoDelete,
+                ),
+              ),
             ),
             const SizedBox(
               height: 10,

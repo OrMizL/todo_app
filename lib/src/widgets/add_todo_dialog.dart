@@ -74,21 +74,27 @@ class _AddTodoDialogState extends ConsumerState<AddTodoDialog> {
     }
 
     return AlertDialog(
-      title: const Text('Add a Todo'),
+      title: Text(
+        'Add a Todo',
+        style: Theme.of(context).textTheme.headlineMedium,
+      ),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: titleFieldController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Type your todo',
                 focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.teal),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
               ),
               autofocus: true,
-              cursorColor: Colors.teal,
+              cursorColor: Theme.of(context).colorScheme.primary,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             Container(
               width: MediaQuery.of(context).size.width * 0.8,
@@ -97,14 +103,17 @@ class _AddTodoDialogState extends ConsumerState<AddTodoDialog> {
                 controller: descriptionFieldController,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'Enter some description',
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.teal),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 ),
                 autofocus: true,
-                cursorColor: Colors.teal,
+                cursorColor: Theme.of(context).colorScheme.primary,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
             Container(
@@ -203,8 +212,8 @@ class _AddTodoDialogState extends ConsumerState<AddTodoDialog> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            backgroundColor: Colors.teal,
-            foregroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -216,8 +225,8 @@ class _AddTodoDialogState extends ConsumerState<AddTodoDialog> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            backgroundColor: Colors.teal,
-            foregroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () {
             Navigator.pop(

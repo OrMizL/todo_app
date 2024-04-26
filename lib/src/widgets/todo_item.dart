@@ -49,11 +49,12 @@ class TodoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       onTap: () {
         onTodoChange(todo);
       },
       leading: Checkbox(
-        checkColor: Colors.greenAccent,
+        checkColor: Colors.white,
         activeColor: Colors.red,
         value: todo.completed,
         onChanged: (value) {
@@ -68,18 +69,18 @@ class TodoItem extends StatelessWidget {
               children: [
                 Text(
                   todo.title,
-                  style: _getTextStyle(todo.completed, false),
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
-                if (todo.description != '')
-                  Text(
-                    todo.description,
-                    style: _getTextStyle(todo.completed, true),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                const SizedBox(
-                  height: 10,
-                ),
+                // if (todo.description != '')
+                //   Text(
+                //     todo.description,
+                //     style: _getTextStyle(todo.completed, true),
+                //     maxLines: 2,
+                //     overflow: TextOverflow.ellipsis,
+                //   ),
+                // const SizedBox(
+                //   height: 10,
+                // ),
                 if (todo.due != null || todo.reminder != null)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -140,7 +141,7 @@ class TodoItem extends StatelessWidget {
         ],
       ),
       trailing: IconButton(
-        iconSize: 30,
+        iconSize: 20,
         icon: Icon(
           Icons.delete,
           color: Colors.red[300],

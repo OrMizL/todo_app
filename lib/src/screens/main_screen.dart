@@ -59,6 +59,7 @@ class MainScreen extends ConsumerWidget {
               icon: const Icon(Icons.menu)),
         ),
         title: const Text('Your Todos'),
+        titleTextStyle: Theme.of(context).textTheme.headlineLarge,
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
@@ -67,7 +68,7 @@ class MainScreen extends ConsumerWidget {
         ],
       ),
       drawer: Drawer(
-        backgroundColor: Colors.teal,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         child: ListView(
           // padding: EdgeInsets.only(top: 100),
           children: [
@@ -81,16 +82,16 @@ class MainScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            const ListTile(
+            ListTile(
               title: Text(
                 'First',
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
             ),
-            const ListTile(
+            ListTile(
               title: Text(
                 'Second',
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
             )
           ],
@@ -100,7 +101,7 @@ class MainScreen extends ConsumerWidget {
         onTodoChange: handleTodoChange,
         onTodoDelete: handleTodoDelete,
       ),
-      backgroundColor: Colors.teal,
+      backgroundColor: Theme.of(context).colorScheme.background,
       floatingActionButton: FloatingActionButton(
         onPressed: handleAddTodo,
         tooltip: 'Add Todo',
@@ -110,7 +111,10 @@ class MainScreen extends ConsumerWidget {
             Radius.circular(16.0), // You can adjust the radius value as needed
           ),
         ),
-        child: const Icon(Icons.add, color: Colors.teal),
+        child: Icon(
+          Icons.add,
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.centerFloat, // Centering the FAB
